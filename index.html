@@ -120,9 +120,23 @@ body.can-edit .form.edit-only[hidden],.form[hidden]{display:none}
 .lightbox[hidden]{display:none}
 .lightbox img{max-width:100%;max-height:85vh;border-radius:8px}
 .lightbox button{position:absolute;top:16px;inset-inline-start:16px}
+.etools{display:none;gap:8px;flex-wrap:wrap;margin-top:auto;padding-top:4px}
+body.editing .etools{display:flex}
+.etools a{text-decoration:none}
+.editbar{display:none;background:var(--accent-soft);border-bottom:1px solid var(--line);font-size:14px}
+body.editing .editbar{display:block}
+.editbar .wrap{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding-top:8px;padding-bottom:8px}
+.editbar a{text-decoration:none}
 </style>
 </head>
 <body>
+<div class="editbar"><div class="wrap">
+  <b>وضع التعديل</b>
+  <span>ارفعي من الزرار اللي تحت كل بند، وبعد «Commit changes» حدّثي الصفحة بعد دقيقة.</span>
+  <a class="btn btn-ghost" id="edit-profile" target="_blank" rel="noopener">تعديل الاسم والنبذة</a>
+  <a class="btn btn-ghost" id="edit-photo" target="_blank" rel="noopener">رفع الصورة الشخصية (باسم photo.jpg)</a>
+  <button class="btn btn-ghost" type="button" id="edit-exit">خروج من وضع التعديل</button>
+</div></div>
 <header class="mast">
   <div class="wrap">
     <div class="mast-row">
@@ -228,7 +242,8 @@ for (const s of SECTIONS){
     const thumbs = el("div", "thumbs"); thumbs.id = "thumbs-" + num;
     const list = el("ul", "files"); list.id = "files-" + num;
     const empty = el("p", "empty", "لم تُرفع شواهد بعد."); empty.id = "empty-" + num;
-    c.append(top, tg, desc, thumbs, list, empty);
+    const et = el("div", "etools"); et.id = "etools-" + num;
+    c.append(top, tg, desc, thumbs, list, empty, et);
     grid.append(c);
   }
   sec.append(head, grid); host.append(sec);
@@ -344,6 +359,31 @@ function render(byCrit, descs, links){
   await Promise.all(jobs);
   for (const k in byCrit) byCrit[k].sort();
   render(byCrit, descs, links);
+
+  /* edit mode: open the site with #edit once; it stays on for this browser */
+  const br = cfg.branch || "main", gh = `https://github.com/${user}/${repo}`;
+  const has = new Set(paths);
+  const store = (k, v) => { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch(e){} };
+  const read = k => { try { return localStorage.getItem(k); } catch(e){ return null; } };
+  if (location.hash === "#edit"){ store("portfolio-edit", "1"); history.replaceState(null, "", location.pathname); }
+  const editing = read("portfolio-edit") === "1";
+  document.body.classList.toggle("editing", editing);
+  if (editing){
+    document.getElementById("edit-profile").href = `${gh}/edit/${br}/config.json`;
+    document.getElementById("edit-photo").href = `${gh}/upload/${br}`;
+    document.getElementById("edit-exit").onclick = () => { store("portfolio-edit", null); document.body.classList.remove("editing"); };
+    const link = (cls, text, href) => { const a = el("a", cls, text); a.href = href; a.target = "_blank"; a.rel = "noopener"; return a; };
+    for (let n = 1; n <= 26; n++){
+      const f = "files/" + pad(n), box = document.getElementById("etools-" + n);
+      const fileUrl = name => has.has(f + "/" + name) ? `${gh}/edit/${br}/${f}/${encodeURIComponent(name)}` : `${gh}/new/${br}/${f}?filename=${encodeURIComponent(name)}`;
+      box.replaceChildren(
+        link("btn", "رفع ملفات", `${gh}/upload/${br}/${f}`),
+        link("btn btn-ghost", "وصف الشاهد", fileUrl(DESC)),
+        link("btn btn-ghost", "روابط", fileUrl(LINKS)),
+        link("btn btn-ghost", "حذف ملف", `${gh}/tree/${br}/${f}`)
+      );
+    }
+  }
 })();
 </script>
 </body>
