@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ملف إنجاز المعلمة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Readex+Pro:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: a green masthead with the teacher's card, a progress strip, then six sections of criterion cards (one per item of the 1448H evaluation card). */
+:root{
+  --ink:#16302d; --muted:#5a6b67; --paper:#f3f6f4; --surface:#ffffff; --line:#d9e2de;
+  --brand:#0f4c45; --brand-ink:#ffffff; --accent:#c9761f; --accent-soft:#fbeedd;
+  --good:#1f7a4d; --good-soft:#e2f2e9; --warn:#a15c00; --warn-soft:#fdf0dc; --danger:#b42318;
+  --display:"Readex Pro","IBM Plex Sans Arabic",Tahoma,sans-serif;
+  --body:"IBM Plex Sans Arabic",Tahoma,Arial,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ink:#e6eeeb; --muted:#9fb2ad; --paper:#0f1a19; --surface:#162523; --line:#29403c;
+    --brand:#123f3a; --brand-ink:#f2f7f5; --accent:#e5a052; --accent-soft:#3a2a17;
+    --good:#5cc690; --good-soft:#173528; --warn:#efb25c; --warn-soft:#3a2b14; --danger:#f2867c;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --ink:#e6eeeb; --muted:#9fb2ad; --paper:#0f1a19; --surface:#162523; --line:#29403c;
+  --brand:#123f3a; --brand-ink:#f2f7f5; --accent:#e5a052; --accent-soft:#3a2a17;
+  --good:#5cc690; --good-soft:#173528; --warn:#efb25c; --warn-soft:#3a2b14; --danger:#f2867c;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.65}
+a{color:inherit}
+button,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+
+/* masthead */
+.mast{background:var(--brand);color:var(--brand-ink);padding:36px 0 28px}
+.mast-row{display:flex;gap:24px;align-items:center;flex-wrap:wrap}
+.avatar{width:84px;height:84px;border-radius:50%;background:rgba(255,255,255,.12);border:2px solid rgba(255,255,255,.35);display:grid;place-items:center;font-family:var(--display);font-size:32px;font-weight:600;overflow:hidden;flex:none}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.who{flex:1;min-width:240px}
+.eyebrow{font-size:14px;opacity:.8;margin:0}
+h1{font-family:var(--display);font-size:clamp(28px,4vw,40px);line-height:1.2;margin:2px 0 6px;text-wrap:balance}
+.sub{margin:0;opacity:.9}
+.bio{margin:12px 0 0;max-width:68ch;opacity:.92}
+.mast .btn-ghost{border-color:rgba(255,255,255,.4);color:var(--brand-ink)}
+
+/* progress strip */
+.strip{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+.strip-row{display:flex;gap:16px;align-items:center;padding:12px 0;flex-wrap:wrap}
+.meter{flex:1;min-width:180px;height:10px;border-radius:99px;background:var(--line);overflow:hidden}
+.meter span{display:block;height:100%;background:var(--good);width:0;transition:width .4s}
+.count{font-variant-numeric:tabular-nums;font-weight:600;white-space:nowrap}
+.nav{display:flex;gap:8px;flex-wrap:wrap;padding:0 0 12px}
+.nav a{text-decoration:none;font-size:14px;padding:4px 12px;border-radius:99px;border:1px solid var(--line);background:var(--paper)}
+.nav a:hover{border-color:var(--accent)}
+
+.notice{margin:16px 0 0;padding:10px 14px;border-radius:10px;background:var(--accent-soft);color:var(--ink);font-size:14px}
+.notice[hidden]{display:none}
+
+/* sections */
+section.sec{padding:28px 0 8px;scroll-margin-top:110px}
+.sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.sec-num{font-family:var(--display);color:var(--accent);font-weight:700;font-size:15px}
+h2{font-family:var(--display);font-size:24px;margin:0;text-wrap:balance}
+.sec-meta{color:var(--muted);font-size:14px;font-variant-numeric:tabular-nums}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+@media (max-width:420px){.grid{grid-template-columns:1fr}}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px;scroll-margin-top:110px}
+.card-top{display:flex;gap:10px;align-items:flex-start}
+.badge{flex:none;width:34px;height:34px;border-radius:9px;background:var(--brand);color:var(--brand-ink);display:grid;place-items:center;font-family:var(--display);font-weight:600;font-size:14px;font-variant-numeric:tabular-nums}
+.card h3{font-family:var(--display);font-size:17px;margin:4px 0 0;flex:1;line-height:1.35}
+.chip{font-size:12.5px;font-weight:600;padding:2px 10px;border-radius:99px;white-space:nowrap;margin-top:6px}
+.chip.ok{background:var(--good-soft);color:var(--good)}
+.chip.miss{background:var(--warn-soft);color:var(--warn)}
+.target{font-size:13.5px;color:var(--muted);margin:0}
+.target b{color:var(--ink);font-weight:600}
+.desc{font-size:14.5px;margin:0;white-space:pre-wrap;border-inline-start:3px solid var(--accent);padding-inline-start:10px}
+.files{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.files li{display:flex;align-items:center;gap:8px;padding:7px 10px;border:1px solid var(--line);border-radius:10px;background:var(--paper)}
+.ftype{flex:none;font-size:11px;font-weight:600;letter-spacing:.02em;padding:1px 6px;border-radius:5px;background:var(--surface);border:1px solid var(--line);color:var(--muted);direction:ltr}
+.files a{flex:1;min-width:0;overflow-wrap:anywhere;text-decoration:none;font-size:14.5px}
+.files a:hover{text-decoration:underline}
+.empty{font-size:14px;color:var(--muted);margin:0}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto;padding-top:4px}
+.btn{border:1px solid var(--brand);background:var(--brand);color:var(--brand-ink);border-radius:9px;padding:6px 12px;font-size:14px;cursor:pointer}
+.btn-ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn-ghost:hover{border-color:var(--accent)}
+.btn-x{border:none;background:none;color:var(--muted);cursor:pointer;font-size:13px;padding:2px 6px;border-radius:6px}
+.btn-x:hover{color:var(--danger)}
+.btn[disabled]{opacity:.6;cursor:progress}
+.form{display:flex;flex-direction:column;gap:8px;padding:10px;border:1px dashed var(--line);border-radius:10px}
+.form[hidden]{display:none}
+.form input,.form textarea{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+.form textarea{min-height:110px;resize:vertical}
+.form-row{display:flex;gap:8px;flex-wrap:wrap}
+.err{color:var(--danger);font-size:13.5px;margin:0}
+.err:empty{display:none}
+.drop{outline:2px dashed var(--accent);outline-offset:-4px}
+footer{color:var(--muted);font-size:13.5px;padding:32px 0 48px}
+.edit-only{display:none}
+body.can-edit .edit-only{display:revert}
+body.can-edit .tools.edit-only{display:flex}
+body.can-edit .form.edit-only{display:flex}
+body.can-edit .form.edit-only[hidden],.form[hidden]{display:none}
+@media (prefers-reduced-motion:reduce){.meter span{transition:none}}
+</style>
+<style>
+.thumbs{display:flex;gap:8px;flex-wrap:wrap}
+.thumbs a{display:block;width:84px;height:84px;border-radius:10px;overflow:hidden;border:1px solid var(--line);background:var(--paper)}
+.thumbs img{width:100%;height:100%;object-fit:cover}
+.lightbox{position:fixed;inset:0;background:rgba(0,0,0,.85);display:grid;place-items:center;z-index:50;padding:20px}
+.lightbox[hidden]{display:none}
+.lightbox img{max-width:100%;max-height:85vh;border-radius:8px}
+.lightbox button{position:absolute;top:16px;inset-inline-start:16px}
+</style>
+</head>
+<body>
+<header class="mast">
+  <div class="wrap">
+    <div class="mast-row">
+      <div class="avatar" id="avatar" aria-hidden="true">ن</div>
+      <div class="who">
+        <p class="eyebrow" id="p-school"></p>
+        <h1 id="p-name">ملف إنجاز المعلمة</h1>
+        <p class="sub" id="p-role"></p>
+        <p class="bio" id="p-bio"></p>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="strip">
+  <div class="wrap">
+    <div class="strip-row">
+      <span class="count" id="count">جارٍ تحميل الشواهد…</span>
+      <div class="meter" role="progressbar" aria-label="نسبة البنود المكتملة" aria-valuemin="0" aria-valuemax="26" aria-valuenow="0" id="meter"><span id="meter-fill"></span></div>
+    </div>
+    <nav class="nav" id="nav" aria-label="أقسام الملف"></nav>
+  </div>
+</div>
+
+<main class="wrap">
+  <p class="notice" id="notice" hidden></p>
+  <div id="sections"></div>
+</main>
+
+<div class="lightbox" id="lightbox" hidden><button class="btn" type="button" id="lb-close">إغلاق</button><img id="lb-img" alt=""></div>
+
+<footer class="wrap">ملف الإنجاز مرتب على بنود بطاقة تقييم ملف إنجاز المعلمة – الخطة التشغيلية للمدرسة 1448هـ (26 بندًا، الدرجة من 104).</footer>
+
+<script>
+const SECTIONS = [
+  {n:1, title:"بيانات المعلمة", items:[
+    [1,"السيرة الذاتية","سيرة محدّثة ومنظمة فيها المؤهلات والخبرات والدورات والإنجازات."],
+    [2,"الرخصة المهنية","رخصة مهنية سارية مع توضيح الرتبة وتاريخ الانتهاء."]]},
+  {n:2, title:"التخطيط والتحضير", items:[
+    [3,"التحضير","تحضير يومي كامل يوضح التمايز، والتقويم التشخيصي والتكويني والختامي، وتنوع الاستراتيجيات ومهارات التفكير العليا."],
+    [4,"تحليل المحتوى للمنهج","تحليل شامل ودقيق لكل الوحدات مرتبط بالمهارات المستهدفة."]]},
+  {n:3, title:"التعليم والتعلم", items:[
+    [5,"استراتيجيات التدريس المنفذة","استراتيجيات متعددة، لكل شاهد وصف للنشاط ونتائج الطالبات وتعليقك وتغذيتك الراجعة."],
+    [6,"مهارات التفكير العليا","أنشطة تنمي التحليل والتقويم والإبداع والتفكير الناقد وحل المشكلات في معظم الدروس، مع وصف لكل شاهد."],
+    [7,"التعلم المتمايز","مهام متدرجة تراعي مستويات الطالبات وأنماط تعلمهن مع أمثلة لكل مستوى ووصف لكل شاهد."],
+    [8,"التعلم الإلكتروني (داخل الحصة وخارجها)","توظيف فعّال ومتكرر لأدوات متنوعة مع وصف لكل شاهد ونتائج الطالبات."],
+    [9,"تفعيل التقنية في التعليم","استخدام مبتكر ومتكرر لأدوات تقنية متنوعة مع وصف لكل شاهد."],
+    [10,"الأنشطة التطبيقية المرتبطة بواقع الطالبات","تقرير تنفيذ لكل نشاط: الهدف، والإجراءات، والنتائج، والشواهد."],
+    [11,"حقائب النشاط","حقيبة متكاملة لكل وحدة: أهداف، وأدوات، وتقويم."],
+    [12,"المشاريع العلمية","مشاريع نوعية بمعايير تقييم ونتائج واضحة وتقرير تنفيذ لكل مشروع."],
+    [13,"الدروس التطبيقية (النموذجية)","درس نموذجي مكتمل موثّق بتقييم المشرفة وأثر ملموس."]]},
+  {n:4, title:"التقويم ونواتج التعلم", items:[
+    [14,"نماذج الاختبارات مع تحليلها","نماذج متنوعة مع تحليل إحصائي دقيق ومقترحات علاجية."],
+    [15,"سلالم التقدير (الروبرك)","سلم تقدير واضح المعايير لكل نشاط ومهمة أدائية مع نماذج مطبقة على أعمال الطالبات."],
+    [16,"ملف التحصيل الدراسي وتحليله","ملف شامل يوضح النتائج ونقاط القوة والضعف مع خطة متابعة."],
+    [17,"الدعم الأكاديمي للمتفوقات","خطة إثرائية فردية موثّقة بأثر ملموس."],
+    [18,"الدعم الأكاديمي للمتأخرات دراسيًا","خطة علاجية فردية موثّقة بمتابعة دورية وتحسن ملحوظ."]]},
+  {n:5, title:"حقوق المتعلم والسلوك", items:[
+    [19,"استمارة تعديل السلوك","استمارات مكتملة للحالات موثقة بالإجراءات والمتابعة والتحسن (أخفي أسماء الطالبات)."],
+    [20,"حصر الحالات السلوكية","حصر دقيق ومحدّث لكل الحالات في فصولك بالتنسيق مع الموجهة الطلابية."],
+    [21,"حصر السلوك الإيجابي وتكريمه","حصر منتظم مع شواهد تكريم وتحفيز: شهادات، أو لوحة شرف، أو رسائل لأولياء الأمور."]]},
+  {n:6, title:"الأنشطة والتطوير المهني", items:[
+    [22,"الأنشطة الوطنية","مشاركة فاعلة في مناسبات متعددة برؤية إبداعية مع تقرير تنفيذ لكل نشاط."],
+    [23,"التطوع","مبادرات تطوعية موثّقة ومتكررة ذات أثر مجتمعي."],
+    [24,"المكتبة الإلكترونية","إثراء منتظم بمصادر متنوعة ومفيدة للطالبات."],
+    [25,"النمو المهني","مشاركة فعّالة موثّقة في كل برامج الخطة: شهادات الدورات والبرامج."],
+    [26,"الدورات المقدمة","دورة أو ورشة قدّمتِها موثّقة بتقييم إيجابي من الحضور."]]}
+];
+
+const pad = n => String(n).padStart(2, "0");
+const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+const DESC = "وصف.txt", LINKS = "روابط.txt";
+const IMG = /\.(jpe?g|png|gif|webp|heic|bmp)$/i;
+const urlOf = path => path.split("/").map(encodeURIComponent).join("/");
+
+function typeLabel(name){
+  const n = name.toLowerCase();
+  if (n.endsWith(".pdf")) return "PDF";
+  if (/\.(mp4|mov|webm|m4v)$/.test(n)) return "فيديو";
+  if (/\.(docx?|odt)$/.test(n)) return "Word";
+  if (/\.(pptx?|odp)$/.test(n)) return "عرض";
+  if (/\.(xlsx?|csv|ods)$/.test(n)) return "جدول";
+  return "ملف";
+}
+function niceName(name){ return name.replace(/\.[^.]+$/, "").replace(/[_-]+/g, " "); }
+
+/* skeleton */
+const nav = document.getElementById("nav"), host = document.getElementById("sections");
+for (const s of SECTIONS){
+  const a = el("a", null, s.n + "- " + s.title); a.href = "#sec-" + s.n; nav.appendChild(a);
+  const sec = el("section", "sec"); sec.id = "sec-" + s.n;
+  const head = el("div", "sec-head");
+  head.append(el("span", "sec-num", "القسم " + s.n), el("h2", null, s.title));
+  const meta = el("span", "sec-meta"); meta.id = "meta-" + s.n; head.append(meta);
+  const grid = el("div", "grid");
+  for (const [num, title, target] of s.items){
+    const c = el("article", "card"); c.id = "c" + pad(num);
+    const top = el("div", "card-top");
+    top.append(el("span", "badge", pad(num)), el("h3", null, title));
+    const chip = el("span", "chip miss", "ناقص"); chip.id = "chip-" + num; top.append(chip);
+    const tg = el("p", "target"); tg.append(el("b", null, "للتميّز: "), document.createTextNode(target));
+    const desc = el("p", "desc"); desc.id = "desc-" + num; desc.hidden = true;
+    const thumbs = el("div", "thumbs"); thumbs.id = "thumbs-" + num;
+    const list = el("ul", "files"); list.id = "files-" + num;
+    const empty = el("p", "empty", "لم تُرفع شواهد بعد."); empty.id = "empty-" + num;
+    c.append(top, tg, desc, thumbs, list, empty);
+    grid.append(c);
+  }
+  sec.append(head, grid); host.append(sec);
+}
+
+const lb = document.getElementById("lightbox"), lbImg = document.getElementById("lb-img");
+document.getElementById("lb-close").onclick = () => { lb.hidden = true; lbImg.src = ""; };
+lb.onclick = e => { if (e.target === lb){ lb.hidden = true; lbImg.src = ""; } };
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !lb.hidden){ lb.hidden = true; lbImg.src = ""; } });
+
+const notice = document.getElementById("notice");
+const note = msg => { notice.textContent = msg; notice.hidden = !msg; };
+
+async function getText(path){
+  try { const r = await fetch(urlOf(path), {cache: "no-cache"}); return r.ok ? (await r.text()).trim() : ""; } catch(e){ return ""; }
+}
+
+function render(byCrit, descs, links){
+  let done = 0;
+  for (const s of SECTIONS){
+    let secDone = 0;
+    for (const [num] of s.items){
+      const files = byCrit[num] || [], lk = links[num] || [];
+      const thumbs = document.getElementById("thumbs-" + num), list = document.getElementById("files-" + num);
+      thumbs.replaceChildren(); list.replaceChildren();
+      for (const f of files){
+        const name = f.split("/").pop();
+        if (IMG.test(name)){
+          const a = el("a"); a.href = urlOf(f); a.title = niceName(name);
+          const img = el("img"); img.loading = "lazy"; img.alt = niceName(name); img.src = urlOf(f);
+          a.append(img);
+          a.onclick = e => { e.preventDefault(); lbImg.src = urlOf(f); lbImg.alt = niceName(name); lb.hidden = false; };
+          thumbs.append(a);
+        } else {
+          const li = el("li"); const a = el("a", null, niceName(name)); a.href = urlOf(f); a.target = "_blank"; a.rel = "noopener";
+          li.append(el("span", "ftype", typeLabel(name)), a); list.append(li);
+        }
+      }
+      for (const [title, url] of lk){
+        const li = el("li"); const a = el("a", null, title); a.href = url; a.target = "_blank"; a.rel = "noopener";
+        li.append(el("span", "ftype", "رابط"), a); list.append(li);
+      }
+      const count = files.length + lk.length, has = count > 0;
+      thumbs.hidden = !thumbs.children.length;
+      document.getElementById("empty-" + num).hidden = has;
+      const chip = document.getElementById("chip-" + num);
+      chip.className = "chip " + (has ? "ok" : "miss");
+      chip.textContent = has ? "فيه شواهد (" + count + ")" : "ناقص";
+      const d = document.getElementById("desc-" + num); d.textContent = descs[num] || ""; d.hidden = !descs[num];
+      if (has){ done++; secDone++; }
+    }
+    document.getElementById("meta-" + s.n).textContent = secDone + " من " + s.items.length + " بنود فيها شواهد";
+  }
+  document.getElementById("count").textContent = done + " من 26 بندًا فيه شواهد";
+  document.getElementById("meter-fill").style.width = (done / 26 * 100) + "%";
+  document.getElementById("meter").setAttribute("aria-valuenow", done);
+}
+
+(async () => {
+  let cfg = {};
+  try { cfg = await (await fetch("config.json", {cache: "no-cache"})).json(); } catch(e){}
+  if (cfg.name) document.getElementById("p-name").textContent = cfg.name;
+  document.getElementById("p-role").textContent = cfg.role || "";
+  document.getElementById("p-school").textContent = cfg.school || "";
+  document.getElementById("p-bio").textContent = cfg.bio || "";
+  if (cfg.photo){
+    const img = new Image(); img.alt = "";
+    img.onload = () => document.getElementById("avatar").replaceChildren(img);
+    img.src = urlOf(cfg.photo);
+  }
+
+  // owner/repo: from config, else from the github.io address
+  let user = cfg.github_user, repo = cfg.github_repo;
+  const h = location.hostname;
+  if (!user && h.endsWith(".github.io")) user = h.split(".")[0];
+  if (!repo && h.endsWith(".github.io")){
+    const seg = location.pathname.split("/").filter(Boolean)[0];
+    repo = (seg && !seg.includes(".")) ? seg : h;
+  }
+  if (!user || !repo){ note("افتحي الموقع من رابط GitHub Pages لعرض الشواهد."); render({}, {}, {}); return; }
+
+  let paths = [];
+  try {
+    const r = await fetch(`https://api.github.com/repos/${user}/${repo}/git/trees/${cfg.branch || "main"}?recursive=1`);
+    if (!r.ok) throw new Error(r.status);
+    const j = await r.json();
+    paths = (j.tree || []).filter(t => t.type === "blob").map(t => t.path);
+  } catch(e){
+    note("تعذر تحميل قائمة الشواهد الآن. حدّثي الصفحة بعد دقيقة.");
+    render({}, {}, {}); return;
+  }
+
+  const byCrit = {}, descs = {}, links = {}, jobs = [];
+  for (const p of paths){
+    const m = p.match(/^files\/(\d{2})\/([^/]+)$/); if (!m) continue;
+    const num = Number(m[1]), name = m[2];
+    if (name.startsWith(".")) continue;
+    if (name === DESC){ jobs.push(getText(p).then(t => { if (t) descs[num] = t; })); continue; }
+    if (name === LINKS){
+      jobs.push(getText(p).then(t => {
+        const arr = [];
+        for (const line of t.split(/\r?\n/)){
+          const url = (line.match(/https?:\/\/\S+/) || [])[0]; if (!url) continue;
+          const title = line.replace(url, "").replace(/[|:\-–]+\s*$/, "").trim() || url;
+          arr.push([title, url]);
+        }
+        if (arr.length) links[num] = arr;
+      }));
+      continue;
+    }
+    (byCrit[num] ||= []).push(p);
+  }
+  await Promise.all(jobs);
+  for (const k in byCrit) byCrit[k].sort();
+  render(byCrit, descs, links);
+})();
+</script>
+</body>
+</html>
